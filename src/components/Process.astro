@@ -1,0 +1,39 @@
+---
+// Le schéma « Creative journey » (double diamant) de la maquette Figma, en SVG.
+interface Props { steps: readonly string[]; milestones: readonly string[] }
+const { steps, milestones } = Astro.props;
+---
+<div class="process">
+  <svg viewBox="0 0 1200 420" role="img" aria-label={`${milestones.join(' → ')}`}>
+    <g fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M60 210 L330 30 L600 210 L330 390 Z" />
+      <path d="M600 210 L870 30 L1140 210 L870 390 Z" />
+      <line x1="330" y1="30" x2="330" y2="390" stroke-dasharray="2 6" opacity=".4" />
+      <line x1="870" y1="30" x2="870" y2="390" stroke-dasharray="2 6" opacity=".4" />
+      <circle cx="60" cy="210" r="22" fill="var(--bg)" />
+      <circle cx="600" cy="210" r="22" fill="var(--bg)" />
+      <circle cx="1140" cy="210" r="22" fill="var(--bg)" />
+    </g>
+  </svg>
+  <ol class="steps">
+    {steps.map((st, i) => <li style={`--i:${i}`}>{st}</li>)}
+  </ol>
+  <ol class="milestones">
+    {milestones.map((m, i) => <li style={`--i:${i}`}>{m}</li>)}
+  </ol>
+</div>
+
+<style>
+  .process { position: relative; border: 1px solid var(--ink); border-radius: 4px; padding: 48px 32px 64px; }
+  svg { width: 100%; height: auto; display: block; }
+  ol { list-style: none; margin: 0; padding: 0; }
+  .steps li { position: absolute; top: calc(48px + 47%); transform: translate(-50%, -50%); left: calc(32px + (100% - 64px) * (0.1625 + var(--i) * 0.225)); width: 16%; text-align: center; font-size: 15px; line-height: 1.4; }
+  .milestones { display: flex; justify-content: space-between; margin-top: 8px; }
+  .milestones li { font-weight: 700; }
+  @media (max-width: 760px) {
+    .steps li { position: static; transform: none; width: auto; text-align: left; }
+    .steps { display: grid; gap: 8px; margin-top: 24px; counter-reset: s; }
+    .steps li::before { counter-increment: s; content: counter(s) '. '; font-weight: 700; }
+    .milestones { margin-top: 16px; }
+  }
+</style>

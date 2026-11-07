@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import Img from '../Img.astro';
+import ProjectCard from '../ProjectCard.astro';
+import { render } from 'astro:content';
+import { t, path, type Lang } from '../../i18n/ui';
+import { projectsFor } from '../../i18n/routes';
+
+interface Props { lang: Lang; slug: string }
+const { lang, slug } = Astro.props;
+const s = t(lang);
+const all = await projectsFor(lang);
+const i = all.findIndex((p) => p.slug === slug);
+const project = all[i];
+const next = all[(i + 1) % all.length];
+const { Content } = await render(project);
+const hasBody = (project.body ?? '').trim().length > 0;
+const d = project.data;
+const facts = [
+  [s.projects.role, d.role],
+  [s.projects.client, d.client],
+  [s.projects.year, d.year],
+  [s.projects.tools, d.tools],
+].filter(([, v]) => v);
+---
+<Base lang={lang} title={d.title} description={d.summary} page={`projects/${slug}`}>
+  <section class="wrap" style="padding-top:80px">
+    <a href={path(lang, 'projects')} class="back">{s.projects.back}</a>
+    <h1 style="margin:24px 0">{d.title}</h1>
+    <ul class="tags">{d.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
+    <p class="lead" style="margin-top:24px;max-width:900px">{d.summary}</p>
+  </section>
+  <section class="wrap" style="padding-top:48px">
+    <Img src={d.cover} alt={d.title} label={s.placeholder} ratio="16 / 9" />
+    {facts.length > 0 && (
+      <dl class="facts">{facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    )}
+  </section>
+  <section class="wrap body">
+    {hasBody ? <Content /> : <p class="lead muted">{s.projects.soon}</p>}
+  </section>
+  <section class="wrap section">
+    <h2 style="margin-bottom:48px">{s.projects.next}</h2>
+    <div class="next"><ProjectCard lang={lang} slug={next.slug} data={next.data} /></div>
+  </section>
+</Base>
+
+<style>
+  .back { font-weight: 700; font-size: 14px; text-decoration: none; }
+  .facts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; margin: 48px 0 0; padding: 32px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  dt { font-size: 14px; color: var(--muted); }
+  dd { margin: 4px 0 0; font-weight: 700; }
+  .body { padding-top: 96px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+  .body :global(h2) { font-size: 40px; font-weight: 700; margin: 72px 0 24px; }
+  .body :global(h2:first-child) { margin-top: 0; }
+  .body :global(p) { font-size: 18px; line-height: 1.7; max-width: 760px; margin-bottom: 16px; }
+  .body :global(img) { margin: 40px 0; border-radius: 4px; }
+  .next { max-width: 660px; }
+</style>

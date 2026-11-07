@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../ProjectCard.astro';
+import { t, path, type Lang } from '../../i18n/ui';
+import { projectsFor } from '../../i18n/routes';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const projects = await projectsFor(lang);
+const filters = Object.entries(s.projects.filters);
+---
+<Base lang={lang} title={s.projects.title} page="projects">
+  <section class="wrap" style="padding-top:80px">
+    <a href={path(lang)} class="back">← Home</a>
+    <h1 style="margin:24px 0">{s.projects.title}</h1>
+    <p class="lead">{s.projects.intro}</p>
+    <div class="filters" role="group">
+      <button class="tag tag--dark" data-filter="all" aria-pressed="true">{s.projects.all}</button>
+      {filters.map(([k, label]) => <button class="tag" data-filter={k} aria-pressed="false">{label}</button>)}
+    </div>
+  </section>
+  <section class="wrap" style="padding-top:80px">
+    <div class="grid">
+      {projects.map((p) => <ProjectCard lang={lang} slug={p.slug} data={p.data} />)}
+    </div>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  const cards = document.querySelectorAll<HTMLElement>('.card');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filter!;
+      buttons.forEach((x) => {
+        const on = x === b;
+        x.classList.toggle('tag--dark', on);
+        x.setAttribute('aria-pressed', String(on));
+      });
+      cards.forEach((c) => {
+        c.hidden = f !== 'all' && !(c.dataset.cat ?? '').split(' ').includes(f);
+      });
+    })
+  );
+</script>
+
+<style>
+  .back { font-weight: 700; font-size: 14px; text-decoration: none; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .filters button { font-size: 14px; padding: 6px 16px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 72px 32px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>

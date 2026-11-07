@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { t, type Lang, languages, defaultLang } from '../i18n/ui';
+
+interface Props { lang: Lang; title?: string; description?: string; page?: string }
+const { lang, title, description, page = '' } = Astro.props;
+const s = t(lang);
+const fullTitle = title ? `${title} — Alma Blaise` : s.meta.title;
+const site = Astro.site ?? new URL('https://almablaise.vercel.app');
+const href = (l: Lang) => new URL((l === defaultLang ? '/' : `/${l}/`) + page, site).toString();
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description ?? s.meta.description} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description ?? s.meta.description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {Object.keys(languages).map((l) => <link rel="alternate" hreflang={l} href={href(l as Lang)} />)}
+  </head>
+  <body>
+    <Nav lang={lang} page={page} />
+    <main><slot /></main>
+    <Footer lang={lang} />
+  </body>
+</html>

@@ -1,0 +1,33 @@
+---
+import { t, path, type Lang } from '../i18n/ui';
+import { site } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const year = new Date().getFullYear();
+---
+<footer>
+  <div class="wrap inner">
+    <div>
+      <p class="name">Alma Blaise</p>
+      <p>{s.footer.line1}</p>
+      <p>{s.footer.line2}</p>
+      <p>© Alma Blaise {year}. {s.footer.rights}</p>
+    </div>
+    <div class="links">
+      <a href={`mailto:${site.email}`}>Mail</a>
+      {site.linkedin && <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>}
+      <a href={site.behance} target="_blank" rel="noopener">Behance</a>
+      <a href={path(lang, 'about')}>{s.nav.about}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { background: var(--ink); color: #fff; margin-top: clamp(80px, 10vw, 160px); padding: 80px 0; }
+  .inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+  .name { font-weight: 700; font-size: 22px; margin-bottom: 8px; }
+  p { font-size: 14px; opacity: .85; }
+  .links { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+  .links a { text-underline-offset: 4px; font-size: 17px; }
+</style>

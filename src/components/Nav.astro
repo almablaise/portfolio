@@ -1,0 +1,30 @@
+---
+import { t, path, languages, type Lang } from '../i18n/ui';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+const s = t(lang);
+---
+<header class="nav wrap">
+  <a class="logo" href={path(lang)}>Alma Blaise</a>
+  <nav aria-label="Main">
+    <a href={path(lang, 'projects')}>{s.nav.work}</a>
+    <a href={path(lang, 'about')}>{s.nav.about}</a>
+    <a href={path(lang) + '#contact'}>{s.nav.contact}</a>
+    <span class="langs">
+      {Object.entries(languages).map(([code, label]) => (
+        <a href={path(code as Lang, page)} hreflang={code} aria-current={code === lang ? 'true' : undefined}>{label}</a>
+      ))}
+    </span>
+  </nav>
+</header>
+
+<style>
+  .nav { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; padding-bottom: 16px; gap: 24px; flex-wrap: wrap; }
+  .logo { font-weight: 700; font-size: 22px; text-decoration: none; }
+  nav { display: flex; gap: clamp(16px, 3vw, 48px); align-items: center; flex-wrap: wrap; }
+  nav a { text-decoration: none; font-size: 15px; }
+  nav > a:hover { text-decoration: underline; }
+  .langs { display: inline-flex; border: 1px solid var(--ink); border-radius: 100px; overflow: hidden; }
+  .langs a { padding: 4px 10px; font-size: 12px; font-weight: 700; }
+  .langs a[aria-current='true'] { background: var(--ink); color: #fff; }
+</style>

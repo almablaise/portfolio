@@ -1,0 +1,13 @@
+---
+// Affiche une image si le fichier existe dans /public, sinon un bloc gris « Visuel à ajouter ».
+import fs from 'node:fs';
+import nodePath from 'node:path';
+
+interface Props { src?: string; alt: string; label: string; class?: string; ratio?: string; round?: boolean }
+const { src, alt, label, class: cls = '', ratio = '16 / 10', round = false } = Astro.props;
+const exists = !!src && fs.existsSync(nodePath.join(process.cwd(), 'public', src));
+const style = `aspect-ratio:${ratio};${round ? 'border-radius:50%;' : ''}`;
+---
+{exists
+  ? <img src={src} alt={alt} class={cls} style={`${style}object-fit:cover;width:100%;`} loading="lazy" />
+  : <div class={`ph ${cls}`} style={style} role="img" aria-label={alt}>{label}</div>}

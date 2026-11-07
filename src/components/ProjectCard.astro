@@ -1,0 +1,30 @@
+---
+import Img from './Img.astro';
+import { t, path, type Lang } from '../i18n/ui';
+interface Props { lang: Lang; slug: string; data: { title: string; summary: string; tags: string[]; cover?: string; category: string[] } }
+const { lang, slug, data } = Astro.props;
+const s = t(lang);
+---
+<article class="card" data-cat={data.category.join(' ')}>
+  <a href={path(lang, `projects/${slug}`)} class="link">
+    <div class="cover"><Img src={data.cover} alt={data.title} label={s.placeholder} ratio="1351 / 735" /></div>
+    <div class="row">
+      <h3>{data.title}</h3>
+      <span class="view">{s.work.view}</span>
+    </div>
+  </a>
+  <ul class="tags">{data.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
+  <p class="summary">{data.summary}</p>
+</article>
+
+<style>
+  .card { display: flex; flex-direction: column; gap: 16px; }
+  .link { text-decoration: none; display: flex; flex-direction: column; gap: 16px; }
+  .cover { overflow: hidden; border-radius: 4px; }
+  .cover :global(img), .cover :global(.ph) { transition: transform .4s ease; }
+  .link:hover .cover :global(img) { transform: scale(1.03); }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .view { font-weight: 700; font-size: 14px; white-space: nowrap; }
+  .link:hover .view { text-decoration: underline; }
+  .summary { line-height: 1.6; }
+</style>
