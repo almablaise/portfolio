@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Img from '../Img.astro';
+import Btn from '../Btn.astro';
+import Process from '../Process.astro';
 import { t, path, type Lang } from '../../i18n/ui';
 import { site, timeline, hardSkills, softSkills } from '../../data/site';
 
@@ -15,23 +17,23 @@ const photos = ['/images/about/team-1.jpg', '/images/about/team-2.jpg'];
   <!-- INTRO -->
   <section class="wrap intro">
     <div class="stack">
-      <p class="kicker">{a.kicker}</p>
-      <h1>{a.title}</h1>
-      {a.intro.map((p) => <p class="lead">{p}</p>)}
-      <div class="btns" style="margin-top:32px">
-        <a class="btn btn--dark" href={site.cv} download>{a.cv}</a>
-        <a class="btn btn--ghost" href={path(lang) + '#contact'}>{s.nav.contact}</a>
+      <span class="pill reveal">{a.kicker}</span>
+      <h1 class="reveal" style="--d:1">{a.title}</h1>
+      {a.intro.map((p, i) => <p class="lead reveal" style={`--d:${i + 2}`}>{p}</p>)}
+      <div class="btns reveal" style="--d:4">
+        <Btn href={site.cv} download>{a.cv}</Btn>
+        <Btn href={path(lang) + '#contact'} variant="ghost">{s.nav.contact}</Btn>
       </div>
     </div>
-    <div class="portrait"><Img src="/images/portrait.jpg" alt="Alma Blaise" label={s.placeholder} ratio="1 / 1" round /></div>
+    <div class="portrait reveal" style="--d:2"><Img src="/images/portrait.jpg" alt="Alma Blaise" label={s.placeholder} ratio="1 / 1" /></div>
   </section>
 
   <!-- PHOTOS -->
   <section class="wrap section">
-    <h2 style="margin-bottom:48px">{a.photosTitle}</h2>
+    <div class="head"><div class="stack"><h2 class="reveal">{a.photosTitle}</h2></div></div>
     <div class="photos">
       {photos.map((src, i) => (
-        <figure class={`photo photo--${i}`}>
+        <figure class="photo reveal" style={`--d:${i}`}>
           <Img src={src} alt={a.photos[i]} label={s.placeholder} ratio="4 / 3" />
           <figcaption>{a.photos[i]}</figcaption>
         </figure>
@@ -42,95 +44,109 @@ const photos = ['/images/about/team-1.jpg', '/images/about/team-2.jpg'];
   <!-- HAND × AI -->
   <section class="wrap section">
     <div class="duo">
-      <div class="half">
+      <div class="half reveal">
         <h2>{a.handTitle}</h2>
         <p class="lead">{a.handText}</p>
-        <ul class="tags">{s.why.hand.map((x) => <li class="tag">{x}</li>)}</ul>
+        <ul class="tags">{s.why.hand.map((x) => <li class="tag tag--line">{x}</li>)}</ul>
       </div>
       <span class="times" aria-hidden="true">×</span>
-      <div class="half half--dark">
+      <div class="half half--dark reveal" style="--d:1">
         <h2>{a.aiTitle}</h2>
         <p class="lead">{a.aiText}</p>
-        <ul class="tags">{s.why.ai.map((x) => <li class="tag" style="border-color:#fff;color:#fff">{x}</li>)}</ul>
+        <ul class="tags">{s.why.ai.map((x) => <li class="tag">{x}</li>)}</ul>
       </div>
     </div>
   </section>
 
+  <!-- PROCESS -->
+  <section class="wrap section">
+    <div class="head"><div class="stack"><h2 class="reveal">{s.how.title}</h2><p class="lead reveal" style="--d:1">{s.how.text}</p></div></div>
+    <div class="reveal"><Process steps={s.how.steps} milestones={s.how.milestones} /></div>
+  </section>
+
   <!-- STORY -->
   <section class="wrap section">
-    <h2 style="margin-bottom:48px">{a.storyTitle}</h2>
-    <ol class="timeline">
-      {timeline.map((e) => (
-        <li class={e.current ? 'current' : ''}>
-          <span class="period">{e.period}</span>
-          <div>
-            <h3>{e.title[lang]}</h3>
-            <p class="place">{e.place}</p>
-            <p>{e.text[lang]}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div class="panel">
+      <div class="head"><div class="stack"><h2 class="reveal">{a.storyTitle}</h2></div></div>
+      <ol class="timeline">
+        {timeline.map((e, i) => (
+          <li class={`reveal ${e.current ? 'current' : ''}`} style={`--d:${i % 3}`}>
+            <span class="period">{e.period}</span>
+            <div>
+              <h3>{e.title[lang]}</h3>
+              <p class="place">{e.place}</p>
+              <p>{e.text[lang]}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
   </section>
 
   <!-- LANGUAGES -->
   <section class="wrap section">
-    <div class="intl">
+    <div class="intl reveal">
       <div class="stack"><h2>{s.intl.title}</h2><p class="lead">{s.intl.text}</p></div>
       <ul class="langs">
-        {s.intl.langs.map((l) => <li class="circle" style="--size:120px"><span><strong>{l.name}</strong><br /><small class="muted">{l.level}</small></span></li>)}
+        {s.intl.langs.map((l) => <li class="circle" style="--size:116px"><span><strong>{l.name}</strong><br /><small class="muted">{l.level}</small></span></li>)}
       </ul>
     </div>
   </section>
 
   <!-- SKILLS + BEYOND -->
   <section class="wrap section">
-    <h2 style="margin-bottom:40px">{a.skillsTitle}</h2>
+    <div class="head"><div class="stack"><h2 class="reveal">{a.skillsTitle}</h2></div></div>
     <div class="skills">
-      <div class="stack"><h3>{a.hard}</h3><ul class="tags">{hardSkills.map((x) => <li class="tag">{x}</li>)}</ul></div>
-      <div class="stack"><h3>{a.soft}</h3><ul class="tags">{softSkills[lang].map((x) => <li class="tag">{x}</li>)}</ul></div>
+      <div class="box reveal"><h3>{a.hard}</h3><ul class="tags">{hardSkills.map((x) => <li class="tag tag--line">{x}</li>)}</ul></div>
+      <div class="box reveal" style="--d:1"><h3>{a.soft}</h3><ul class="tags">{softSkills[lang].map((x) => <li class="tag tag--line">{x}</li>)}</ul></div>
     </div>
-    <h3 style="margin:80px 0 32px">{a.beyondTitle}</h3>
+    <h3 class="reveal" style="margin:64px 0 24px">{a.beyondTitle}</h3>
     <ul class="beyond">
-      {a.beyond.map((x) => <li class="circle" style="--size:150px"><span>{x}</span></li>)}
+      {a.beyond.map((x, i) => <li class="circle reveal" style={`--size:148px;--d:${i}`}><span>{x}</span></li>)}
     </ul>
   </section>
 </Base>
 
 <style>
-  .intro { display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; align-items: center; padding-top: 80px; }
-  .intro h1 { font-size: clamp(38px, 4.4vw, 64px); }
-  .portrait { max-width: 400px; justify-self: end; width: 100%; }
+  .intro { display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center; padding-top: clamp(40px, 6vw, 80px); }
+  .intro h1 { font-size: clamp(36px, 4.2vw, 60px); line-height: 1.02; }
+  .portrait { justify-self: end; width: 100%; max-width: 420px; }
+  .portrait :global(img), .portrait :global(.ph) { border-radius: 50%; }
 
-  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-  .photo { margin: 0; }
-  figcaption { font-size: 14px; margin-top: 12px; color: var(--muted); }
+  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .photo { margin: 0; background: var(--light); border-radius: var(--r-lg); padding: 16px; }
+  .photo :global(img), .photo :global(.ph) { border-radius: var(--r-md); }
+  figcaption { font-size: 14px; padding: 16px 8px 4px; color: var(--muted); }
 
-  .duo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 32px; align-items: center; }
-  .half { border: 1px solid var(--ink); border-radius: 4px; padding: 48px 40px; display: flex; flex-direction: column; gap: 24px; height: 100%; }
+  .duo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; }
+  .half { background: var(--light); border-radius: var(--r-xl); padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; height: 100%; }
   .half--dark { background: var(--ink); color: #fff; }
-  .times { font-family: var(--serif); font-weight: 700; font-size: 48px; }
+  .half--dark .lead { color: rgba(255,255,255,.8); }
+  .times { font-family: var(--serif); font-size: 44px; }
 
-  .timeline { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--ink); }
-  .timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 32px; padding: 0 0 48px 32px; position: relative; }
-  .timeline li::before { content: ''; position: absolute; left: -7px; top: 6px; width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--ink); background: var(--bg); }
-  .timeline li.current::before { background: var(--ink); }
-  .period { font-weight: 700; }
-  .timeline h3 { font-size: 24px; }
-  .place { font-weight: 500; color: var(--muted); margin: 4px 0 8px; }
+  .timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .timeline li { display: grid; grid-template-columns: 150px 1fr; gap: 24px; background: #fff; border-radius: var(--r-lg); padding: 24px 28px; border: 1px solid #fff; transition: border-color .3s; }
+  .timeline li:hover { border-color: var(--ink); }
+  .timeline li.current .period { background: var(--yellow); }
+  .period { align-self: start; justify-self: start; font-family: var(--title); font-size: 14px; padding: 4px 12px; border-radius: 999px; background: var(--light); }
+  .timeline h3 { font-size: 21px; }
+  .place { color: var(--muted); font-size: 14px; margin: 4px 0 8px; }
 
-  .intl { display: grid; grid-template-columns: 1fr 1.4fr; gap: 48px; align-items: center; }
-  .langs, .beyond { display: flex; flex-wrap: wrap; gap: 16px; list-style: none; margin: 0; padding: 0; }
+  .intl { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: center; border: 1px solid var(--ink); border-radius: var(--r-xl); padding: 40px; }
+  .langs, .beyond { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; margin: 0; padding: 0; }
   .langs { justify-content: flex-end; }
-  .langs li, .beyond li { font-size: 15px; line-height: 1.3; }
+  .langs li, .beyond li { font-size: 14px; line-height: 1.3; }
+  .beyond li { background: var(--light); border-color: var(--light); transition: background-color .3s; }
+  .beyond li:hover { background: var(--yellow); border-color: var(--yellow); }
 
-  .skills { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .skills { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .box { background: var(--light); border-radius: var(--r-lg); padding: 32px; display: flex; flex-direction: column; gap: 20px; }
 
   @media (max-width: 900px) {
     .intro, .intl, .skills, .photos, .duo { grid-template-columns: 1fr; }
-    .portrait { justify-self: start; max-width: 240px; order: -1; }
+    .portrait { justify-self: start; max-width: 260px; order: -1; }
     .times { justify-self: center; }
-    .timeline li { grid-template-columns: 1fr; gap: 8px; }
+    .timeline li { grid-template-columns: 1fr; gap: 10px; }
     .langs { justify-content: flex-start; }
   }
 </style>

@@ -1,30 +1,32 @@
 ---
 import Img from './Img.astro';
 import { t, path, type Lang } from '../i18n/ui';
-interface Props { lang: Lang; slug: string; data: { title: string; summary: string; tags: string[]; cover?: string; category: string[] } }
-const { lang, slug, data } = Astro.props;
+interface Props { lang: Lang; slug: string; data: { title: string; summary: string; tags: string[]; cover?: string; category: string[] }; d?: number }
+const { lang, slug, data, d = 0 } = Astro.props;
 const s = t(lang);
 ---
-<article class="card" data-cat={data.category.join(' ')}>
+<article class="card reveal" style={`--d:${d}`} data-cat={data.category.join(' ')}>
   <a href={path(lang, `projects/${slug}`)} class="link">
-    <div class="cover"><Img src={data.cover} alt={data.title} label={s.placeholder} ratio="1351 / 735" /></div>
-    <div class="row">
+    <div class="cover"><Img src={data.cover} alt={data.title} label={s.placeholder} ratio="16 / 10" /></div>
+    <div class="body">
       <h3>{data.title}</h3>
-      <span class="view">{s.work.view}</span>
+      <p class="summary">{data.summary}</p>
+      <ul class="tags">{data.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
+      <span class="view">{s.work.view}<span class="arrow" aria-hidden="true">→</span></span>
     </div>
   </a>
-  <ul class="tags">{data.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
-  <p class="summary">{data.summary}</p>
 </article>
 
 <style>
-  .card { display: flex; flex-direction: column; gap: 16px; }
-  .link { text-decoration: none; display: flex; flex-direction: column; gap: 16px; }
-  .cover { overflow: hidden; border-radius: 4px; }
-  .cover :global(img), .cover :global(.ph) { transition: transform .4s ease; }
-  .link:hover .cover :global(img) { transform: scale(1.03); }
-  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .view { font-weight: 700; font-size: 14px; white-space: nowrap; }
-  .link:hover .view { text-decoration: underline; }
-  .summary { line-height: 1.6; }
+  .card { background: var(--light); border: 1px solid var(--light); border-radius: var(--r-lg); padding: 16px; transition: border-color .3s, transform .35s var(--ease); }
+  .card:hover { border-color: var(--ink); }
+  .link { text-decoration: none; display: flex; flex-direction: column; height: 100%; }
+  .cover { overflow: hidden; border-radius: var(--r-md); }
+  .cover :global(img), .cover :global(.ph) { border-radius: var(--r-md); transition: transform .6s var(--ease); }
+  .card:hover .cover :global(img) { transform: scale(1.04); }
+  .body { display: flex; flex-direction: column; gap: 12px; padding: 24px 12px 8px; flex: 1; }
+  .summary { font-size: 15px; line-height: 1.55; color: var(--muted); }
+  .view { margin-top: auto; padding-top: 8px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+  .arrow { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--ink); display: grid; place-items: center; font-size: 12px; transition: background-color .3s, transform .3s var(--ease); }
+  .card:hover .arrow { background: var(--yellow); border-color: var(--yellow); transform: translateX(4px); }
 </style>

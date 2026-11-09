@@ -167,3 +167,26 @@ export const testimonials: { quote: L; name: string; role: string; placeholder?:
     role: '[Role], HomeCycle',
   },
 ];
+
+// Clients (bandeau « Ils m'ont fait confiance ») — remplacer par les logos dans /public/images/logos/ quand ils sont disponibles
+export const clients = ['Jumanji Studio', 'HomeCycle', 'le·tournant', 'GaiaConnect', 'The Spaceship', 'Beyond Growth'];
+
+// Références (repris du site Webflow)
+export const references: { name: string; org: string; text: L }[] = [
+  { name: 'Valentin Lheureux', org: 'HomeCycle', text: {
+    en: 'Art direction, photo shoot direction, visual identity and logo, website mockups, wireframes and user flows, social media visuals.',
+    fr: 'Direction artistique, direction de shooting photo, identité visuelle et logo, maquettes du site, wireframes et parcours utilisateurs, visuels pour les réseaux sociaux.',
+    es: 'Dirección de arte, dirección de sesión de fotos, identidad visual y logo, maquetas web, wireframes y flujos de usuario, visuales para redes sociales.' } },
+  { name: 'Yohan Lafon', org: 'Jumanji Studio', text: {
+    en: 'User interviews, rebranding, website updates and visual content creation.',
+    fr: 'Entretiens utilisateurs, refonte de marque, mises à jour du site et création de contenus visuels.',
+    es: 'Entrevistas con usuarios, rebranding, actualizaciones de la web y creación de contenido visual.' } },
+  { name: 'Benjamin Mercier', org: 'GaiaConnect', text: {
+    en: 'Visual identity, social media development and web design mockups.',
+    fr: 'Identité visuelle, développement des réseaux sociaux et maquettes web.',
+    es: 'Identidad visual, desarrollo de redes sociales y maquetas web.' } },
+  { name: 'Marion Cas', org: 'Consultant', text: {
+    en: 'Social media visuals (banners, LinkedIn posts) and a full website, from mockup to publication in Webflow.',
+    fr: 'Visuels pour les réseaux sociaux (bannières, posts LinkedIn) et un site complet, de la maquette à la mise en ligne sur Webflow.',
+    es: 'Visuales para redes sociales (banners, posts de LinkedIn) y una web completa, de la maqueta a la publicación en Webflow.' } },
+];

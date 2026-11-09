@@ -1,0 +1,13 @@
+---
+// Bouton pilule avec le texte qui glisse au survol (comme sur le site Webflow)
+interface Props { href: string; variant?: 'dark' | 'ghost' | 'yellow'; download?: boolean; external?: boolean }
+const { href, variant = 'dark', download = false, external = false } = Astro.props;
+const label = await Astro.slots.render('default');
+---
+<a
+  class={`btn btn--${variant}`}
+  href={href}
+  download={download || undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener' : undefined}
+><span class="roll"><span set:html={label} /><span aria-hidden="true" set:html={label} /></span></a>

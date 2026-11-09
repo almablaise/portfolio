@@ -24,14 +24,14 @@ const facts = [
 ].filter(([, v]) => v);
 ---
 <Base lang={lang} title={d.title} description={d.summary} page={`projects/${slug}`}>
-  <section class="wrap" style="padding-top:80px">
-    <a href={path(lang, 'projects')} class="back">{s.projects.back}</a>
-    <h1 style="margin:24px 0">{d.title}</h1>
-    <ul class="tags">{d.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
-    <p class="lead" style="margin-top:24px;max-width:900px">{d.summary}</p>
+  <section class="wrap top">
+    <a href={path(lang, 'projects')} class="back reveal">{s.projects.back}</a>
+    <h1 class="reveal" style="--d:1">{d.title}</h1>
+    <ul class="tags reveal" style="--d:2">{d.tags.map((tg) => <li class="tag">{tg}</li>)}</ul>
+    <p class="lead reveal" style="--d:3">{d.summary}</p>
   </section>
-  <section class="wrap" style="padding-top:48px">
-    <Img src={d.cover} alt={d.title} label={s.placeholder} ratio="16 / 9" />
+  <section class="wrap" style="padding-top:40px">
+    <div class="hero-img reveal"><Img src={d.cover} alt={d.title} label={s.placeholder} ratio="16 / 9" /></div>
     {facts.length > 0 && (
       <dl class="facts">{facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
     )}
@@ -40,20 +40,25 @@ const facts = [
     {hasBody ? <Content /> : <p class="lead muted">{s.projects.soon}</p>}
   </section>
   <section class="wrap section">
-    <h2 style="margin-bottom:48px">{s.projects.next}</h2>
+    <h2 style="margin-bottom:40px">{s.projects.next}</h2>
     <div class="next"><ProjectCard lang={lang} slug={next.slug} data={next.data} /></div>
   </section>
 </Base>
 
 <style>
-  .back { font-weight: 700; font-size: 14px; text-decoration: none; }
-  .facts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; margin: 48px 0 0; padding: 32px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .top { padding-top: clamp(40px, 6vw, 80px); display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+  .top .lead { max-width: 860px; }
+  .back { font-size: 14px; text-decoration: none; padding: 6px 14px; border-radius: 999px; background: var(--light); transition: background-color .3s; }
+  .back:hover { background: var(--yellow); }
+  .hero-img { background: var(--light); border-radius: var(--r-xl); padding: 16px; }
+  .hero-img :global(img), .hero-img :global(.ph) { border-radius: var(--r-lg); }
+  .facts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; margin: 24px 0 0; padding: 28px 36px; background: var(--light); border-radius: var(--r-xl); }
   dt { font-size: 14px; color: var(--muted); }
   dd { margin: 4px 0 0; font-weight: 700; }
   .body { padding-top: 96px; max-width: 1100px; margin-left: auto; margin-right: auto; }
-  .body :global(h2) { font-size: 40px; font-weight: 700; margin: 72px 0 24px; }
+  .body :global(h2) { font-size: clamp(28px, 3vw, 40px); margin: 72px 0 20px; }
   .body :global(h2:first-child) { margin-top: 0; }
   .body :global(p) { font-size: 18px; line-height: 1.7; max-width: 760px; margin-bottom: 16px; }
-  .body :global(img) { margin: 40px 0; border-radius: 4px; }
-  .next { max-width: 660px; }
+  .body :global(img) { margin: 32px 0; border-radius: var(--r-lg); background: var(--light); }
+  .next { max-width: 420px; }
 </style>

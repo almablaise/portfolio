@@ -1,30 +1,45 @@
 ---
+import Btn from './Btn.astro';
 import { t, path, languages, type Lang } from '../i18n/ui';
 interface Props { lang: Lang; page: string }
 const { lang, page } = Astro.props;
 const s = t(lang);
 ---
-<header class="nav wrap">
-  <a class="logo" href={path(lang)}>Alma Blaise</a>
-  <nav aria-label="Main">
-    <a href={path(lang, 'projects')}>{s.nav.work}</a>
-    <a href={path(lang, 'about')}>{s.nav.about}</a>
-    <a href={path(lang) + '#contact'}>{s.nav.contact}</a>
-    <span class="langs">
-      {Object.entries(languages).map(([code, label]) => (
-        <a href={path(code as Lang, page)} hreflang={code} aria-current={code === lang ? 'true' : undefined}>{label}</a>
-      ))}
-    </span>
-  </nav>
+<header class="nav">
+  <div class="bar">
+    <a class="logo" href={path(lang)}>Alma Blaise</a>
+    <nav aria-label="Main">
+      <a class="link" href={path(lang, 'projects')}>{s.nav.work}</a>
+      <a class="link" href={path(lang, 'about')}>{s.nav.about}</a>
+      <span class="langs">
+        {Object.entries(languages).map(([code, label]) => (
+          <a href={path(code as Lang, page)} hreflang={code} aria-current={code === lang ? 'true' : undefined}>{label}</a>
+        ))}
+      </span>
+      <Btn href={path(lang) + '#contact'}>{s.nav.contact}</Btn>
+    </nav>
+  </div>
 </header>
 
 <style>
-  .nav { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; padding-bottom: 16px; gap: 24px; flex-wrap: wrap; }
-  .logo { font-weight: 700; font-size: 22px; text-decoration: none; }
-  nav { display: flex; gap: clamp(16px, 3vw, 48px); align-items: center; flex-wrap: wrap; }
-  nav a { text-decoration: none; font-size: 15px; }
-  nav > a:hover { text-decoration: underline; }
-  .langs { display: inline-flex; border: 1px solid var(--ink); border-radius: 100px; overflow: hidden; }
-  .langs a { padding: 4px 10px; font-size: 12px; font-weight: 700; }
+  .nav { position: fixed; top: 12px; left: 0; right: 0; z-index: 50; padding: 0 var(--pad); }
+  .bar {
+    max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    background: rgba(248, 248, 248, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius: 999px; padding: 8px 8px 8px 24px;
+  }
+  .logo { font-family: var(--title); font-weight: 500; font-size: 20px; text-decoration: none; letter-spacing: -0.01em; }
+  nav { display: flex; gap: 4px; align-items: center; }
+  .link { text-decoration: none; font-size: 14px; padding: 8px 12px; border-radius: 999px; transition: background-color .3s; }
+  .link:hover { background: var(--yellow); }
+  .langs { display: inline-flex; margin: 0 8px; border-radius: 999px; background: #fff; padding: 3px; }
+  .langs a { padding: 4px 9px; font-size: 12px; font-weight: 700; text-decoration: none; border-radius: 999px; transition: background-color .3s; }
+  .langs a:hover { background: var(--yellow); }
   .langs a[aria-current='true'] { background: var(--ink); color: #fff; }
+  @media (max-width: 720px) {
+    .bar { padding-left: 16px; }
+    .logo { font-size: 17px; }
+    .link { display: none; }
+    .langs { margin: 0 4px; }
+  }
 </style>

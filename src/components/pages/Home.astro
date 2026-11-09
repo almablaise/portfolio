@@ -1,177 +1,268 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Img from '../Img.astro';
+import Btn from '../Btn.astro';
 import ProjectCard from '../ProjectCard.astro';
-import Process from '../Process.astro';
 import { t, path, type Lang } from '../../i18n/ui';
 import { projectsFor } from '../../i18n/routes';
-import { site, testimonials } from '../../data/site';
+import { site, testimonials, clients, references } from '../../data/site';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
+const x = s.extra;
 const featured = (await projectsFor(lang)).filter((p) => p.data.featured).slice(0, 6);
 const quotes = testimonials.filter((q) => q.show !== false);
+const initials = (n: string) => n.split(' ').map((w) => w[0]).join('').slice(0, 2);
+const plus = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 ---
 <Base lang={lang}>
   <!-- HERO -->
   <section class="wrap hero">
-    <div class="stack">
-      <p class="kicker">{s.hero.kicker}</p>
-      <h1>{s.hero.title}</h1>
-      <p class="lead">{s.hero.text}</p>
-      <div class="btns" style="margin-top:40px">
-        <a class="btn btn--dark" href="#work">{s.hero.cta1}</a>
-        <a class="btn btn--ghost" href="#contact">{s.hero.cta2}</a>
+    <div class="hero-text">
+      <span class="pill reveal">{s.hero.kicker}</span>
+      <h1 class="reveal" style="--d:1">{s.hero.title}</h1>
+      <p class="lead reveal" style="--d:2">{s.hero.text}</p>
+      <div class="btns reveal" style="--d:3">
+        <Btn href="#work">{s.hero.cta1}</Btn>
+        <Btn href="#contact" variant="ghost">{s.hero.cta2}</Btn>
       </div>
     </div>
-    <div class="hero-art"><Img src="/images/illustration.png" alt="" label={s.placeholder} ratio="438 / 606" /></div>
+    <div class="hero-art reveal" style="--d:2">
+      <Img src="/images/illustration.png" alt="" label={s.placeholder} ratio="438 / 606" />
+    </div>
   </section>
 
-  <!-- WHY WORK WITH ME : impact + main & IA -->
+  <!-- CLIENTS -->
+  <section class="wrap logos reveal">
+    <p class="logos-title">{x.logos}</p>
+    <ul>{clients.map((c) => <li>{c}</li>)}</ul>
+  </section>
+
+  <!-- WHY : impact + main & IA -->
   <section class="wrap section">
-    <p class="kicker">{s.why.kicker}</p>
-    <h2 class="why-title">{s.why.title}</h2>
-    <div class="pillars">
-      {s.why.pillars.map((p, i) => (
-        <div class={`pillar ${i === 1 ? 'pillar--dark' : ''}`}>
-          <span class="kicker">0{i + 1}</span>
-          <h3>{p.title}</h3>
-          <p>{p.text}</p>
+    <div class="panel">
+      <div class="head">
+        <div class="stack">
+          <span class="pill reveal">{s.why.kicker}</span>
+          <h2 class="reveal" style="--d:1">{s.why.title}</h2>
         </div>
-      ))}
-    </div>
-    <div class="handai">
-      <ul class="tags">{s.why.hand.map((x) => <li class="tag">{x}</li>)}</ul>
-      <span class="times" aria-hidden="true">×</span>
-      <ul class="tags">{s.why.ai.map((x) => <li class="tag tag--dark">{x}</li>)}</ul>
+      </div>
+      <div class="pillars">
+        {s.why.pillars.map((p, i) => (
+          <div class={`pillar reveal ${i === 1 ? 'pillar--dark' : ''}`} style={`--d:${i}`}>
+            <span class="num">0{i + 1}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </div>
+        ))}
+      </div>
+      <div class="handai reveal">
+        <ul class="tags">{s.why.hand.map((h) => <li class="tag tag--line">{h}</li>)}</ul>
+        <span class="times" aria-hidden="true">×</span>
+        <ul class="tags">{s.why.ai.map((h) => <li class="tag tag--dark">{h}</li>)}</ul>
+      </div>
     </div>
   </section>
 
   <!-- SERVICES -->
   <section class="wrap section">
-    <h2>{s.services.title}</h2>
-    <div class="services">
-      {s.services.items.map((it) => (
-        <div class="service">
-          <div class="circle"><h3>{it.title}</h3></div>
-          <p>{it.text}</p>
+    <div class="head">
+      <div class="stack">
+        <span class="pill reveal">{x.servicesKicker}</span>
+        <h2 class="reveal" style="--d:1">{s.services.title}</h2>
+      </div>
+    </div>
+    {s.services.items.map((it, i) => (
+      <details class="acc reveal" style={`--d:${i}`} open={i === 0}>
+        <summary>{it.title}<span class="plus" set:html={plus} /></summary>
+        <div class="acc-body"><p class="lead">{it.text}</p></div>
+      </details>
+    ))}
+  </section>
+
+  <!-- SELECTED WORK -->
+  <section class="wrap section" id="work">
+    <div class="head">
+      <div class="stack">
+        <span class="pill reveal">{x.workKicker}</span>
+        <h2 class="reveal" style="--d:1">{s.work.title}</h2>
+      </div>
+      <div class="reveal"><Btn href={path(lang, 'projects')} variant="ghost">{s.work.all}</Btn></div>
+    </div>
+    <div class="grid">
+      {featured.map((p, i) => <ProjectCard lang={lang} slug={p.slug} data={p.data} d={i % 3} />)}
+    </div>
+  </section>
+
+  <!-- REFERENCES -->
+  <section class="wrap section">
+    <div class="head">
+      <div class="stack">
+        <span class="pill reveal">{x.refsKicker}</span>
+        <h2 class="reveal" style="--d:1">{x.refsTitle}</h2>
+        <p class="lead reveal" style="--d:2">{x.refsText}</p>
+      </div>
+    </div>
+    <div class="refs">
+      {references.map((r, i) => (
+        <div class="ref reveal" style={`--d:${i}`}>
+          <span class="avatar">{initials(r.name)}</span>
+          <div><h3>{r.name}</h3><p class="org">{r.org}</p></div>
+          <p class="muted">{r.text[lang]}</p>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- SELECTED WORK -->
-  <section class="wrap section" id="work">
-    <div class="head"><h2>{s.work.title}</h2><a href={path(lang, 'projects')}>{s.work.all}</a></div>
-    <div class="grid">
-      {featured.map((p) => <ProjectCard lang={lang} slug={p.slug} data={p.data} />)}
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
+  <!-- TESTIMONIALS (s'affiche seulement quand il y a de vrais avis) -->
   {quotes.length > 0 && (
     <section class="wrap section">
-      <h2 style="margin-bottom:48px">{s.testimonials.title}</h2>
-      <div class="quotes">
-        {quotes.map((q) => (
-          <figure class={`quote ${q.placeholder ? 'quote--ph' : ''}`}>
-            <span class="mark" aria-hidden="true">“</span>
-            <blockquote>{q.quote[lang]}</blockquote>
-            <figcaption><strong>{q.name}</strong><span>{q.role}</span></figcaption>
-          </figure>
-        ))}
+      <div class="panel">
+        <div class="head"><div class="stack"><h2>{s.testimonials.title}</h2></div></div>
+        <div class="quotes">
+          {quotes.map((q, i) => (
+            <figure class="quote reveal" style={`--d:${i}`}>
+              <blockquote>“{q.quote[lang]}”</blockquote>
+              <figcaption><strong>{q.name}</strong><span>{q.role}</span></figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   )}
 
-  <!-- ABOUT TEASER + INTERNATIONAL -->
+  <!-- ABOUT TEASER + LANGUES -->
   <section class="wrap section">
-    <h2 style="margin-bottom:48px">{s.aboutTeaser.title}</h2>
     <div class="about">
-      <div class="portrait"><Img src="/images/portrait.jpg" alt="Alma Blaise" label={s.placeholder} ratio="1 / 1" round /></div>
+      <div class="portrait reveal"><Img src="/images/portrait.jpg" alt="Alma Blaise" label={s.placeholder} ratio="1 / 1" /></div>
       <div class="stack">
-        <p class="lead">{s.aboutTeaser.text}</p>
-        <a class="btn btn--dark" href={path(lang, 'about')}>{s.aboutTeaser.more}</a>
+        <h2 class="reveal">{s.aboutTeaser.title}</h2>
+        <p class="lead reveal" style="--d:1">{s.aboutTeaser.text}</p>
+        <div class="reveal" style="--d:2"><Btn href={path(lang, 'about')}>{s.aboutTeaser.more}</Btn></div>
       </div>
     </div>
-    <div class="intl">
-      <div class="stack">
-        <h3>{s.intl.title}</h3>
-        <p>{s.intl.text}</p>
-      </div>
+    <div class="intl reveal">
+      <div class="stack"><h3>{s.intl.title}</h3><p class="muted">{s.intl.text}</p></div>
       <ul class="langs">
-        {s.intl.langs.map((l) => <li class="circle" style="--size:112px"><span><strong>{l.name}</strong><br /><small class="muted">{l.level}</small></span></li>)}
+        {s.intl.langs.map((l) => <li class="circle" style="--size:108px"><span><strong>{l.name}</strong><br /><small class="muted">{l.level}</small></span></li>)}
       </ul>
     </div>
   </section>
 
-  <!-- HOW I WORK -->
+  <!-- FAQ -->
   <section class="wrap section">
-    <h2>{s.how.title}</h2>
-    <p class="lead" style="margin:24px 0 48px">{s.how.text}</p>
-    <Process steps={s.how.steps} milestones={s.how.milestones} />
+    <div class="panel faq">
+      <div class="head">
+        <div class="stack">
+          <span class="pill reveal">{x.faqKicker}</span>
+          <h2 class="reveal" style="--d:1">{x.faqTitle}</h2>
+          <p class="reveal" style="--d:2">{x.faqText}</p>
+        </div>
+      </div>
+      {x.faq.map((f, i) => (
+        <details class="acc reveal" style={`--d:${i}`}>
+          <summary>{f.q}<span class="plus" set:html={plus} /></summary>
+          <div class="acc-body"><p class="lead">{f.a}</p></div>
+        </details>
+      ))}
+      <div class="more reveal">
+        <div><h3>{x.faqMore}</h3><p class="muted">{x.faqMoreText}</p></div>
+        <Btn href="#contact">{s.hero.cta2}</Btn>
+      </div>
+    </div>
   </section>
 
   <!-- CONTACT -->
   <section class="wrap section" id="contact">
-    <h2>{s.contact.title}</h2>
-    <div class="contact">
-      <p class="lead">{s.contact.text}</p>
+    <div class="contact reveal">
+      <div class="stack">
+        <span class="pill">{s.nav.contact}</span>
+        <h2>{s.contact.title}</h2>
+        <p class="lead">{s.contact.text}</p>
+        <div class="btns">
+          <Btn href={`mailto:${site.email}`} variant="yellow">{s.contact.cta}</Btn>
+          <Btn href={site.cv} download variant="ghost">{s.about.cv}</Btn>
+        </div>
+      </div>
       <dl>
         <div><dt>{s.contact.mail}</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
         <div><dt>{s.contact.based}</dt><dd>{site.city}</dd></div>
-        {site.linkedin && <div><dt>LinkedIn</dt><dd><a href={site.linkedin} target="_blank" rel="noopener">Alma Blaise</a></dd></div>}
         <div><dt>Behance</dt><dd><a href={site.behance} target="_blank" rel="noopener">behance.net/pommeblais430c</a></dd></div>
-        <a class="btn btn--dark" href={`mailto:${site.email}`}>{s.contact.cta}</a>
+        {site.linkedin && <div><dt>LinkedIn</dt><dd><a href={site.linkedin} target="_blank" rel="noopener">Alma Blaise</a></dd></div>}
       </dl>
     </div>
   </section>
 </Base>
 
 <style>
-  .hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 64px; align-items: center; padding-top: clamp(60px, 8vw, 120px); }
-  .hero h1 { max-width: 820px; }
-  .hero-art { max-width: 400px; justify-self: end; width: 100%; }
+  .hero { display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: center; padding-top: clamp(40px, 6vw, 88px); }
+  .hero-text { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+  .hero h1 { max-width: 640px; }
+  .hero-art { justify-self: end; width: 100%; max-width: 420px; background: var(--light); border-radius: var(--r-lg); padding: 32px; }
+  .hero-art :global(img) { mix-blend-mode: multiply; }
 
-  .why-title { margin: 16px 0 48px; max-width: 900px; font-size: clamp(36px, 4vw, 56px); }
-  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-  .pillar { border: 1px solid var(--ink); border-radius: 4px; padding: 40px 32px; display: flex; flex-direction: column; gap: 20px; }
-  .pillar h3 { font-size: 32px; }
+  .logos { margin-top: clamp(56px, 7vw, 96px); text-align: center; }
+  .logos-title { font-size: 18px; margin-bottom: 28px; }
+  .logos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px 32px; }
+  .logos li { font-family: var(--title); font-weight: 500; font-size: clamp(16px, 1.6vw, 21px); letter-spacing: -0.02em; color: var(--muted); transition: color .3s; }
+  .logos li:hover { color: var(--ink); }
+
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pillar { background: #fff; border-radius: var(--r-lg); padding: 32px; display: flex; flex-direction: column; gap: 16px; }
   .pillar--dark { background: var(--ink); color: #fff; }
-  .handai { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 40px; }
-  .times { font-family: var(--serif); font-weight: 700; font-size: 28px; }
+  .num { width: 40px; height: 40px; border-radius: 50%; background: var(--yellow); color: var(--ink); display: grid; place-items: center; font-family: var(--title); font-size: 14px; }
+  .pillar p { line-height: 1.6; }
+  .pillar--dark p { color: rgba(255,255,255,.8); }
+  .handai { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 32px; }
+  .times { font-family: var(--serif); font-size: 28px; }
 
-  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 48px; }
-  .service { display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center; }
-  .service p { max-width: 340px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 72px 32px; }
+  .refs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .ref { background: var(--light); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: transform .35s var(--ease); }
+  .ref:hover { transform: translateY(-1rem); }
+  .ref h3 { font-size: 20px; }
+  .org { font-size: 14px; }
+  .ref .muted { font-size: 14px; line-height: 1.55; }
+  .avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; font-family: var(--serif); font-size: 22px; }
 
-  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-  .quote { margin: 0; border: 1px solid var(--ink); border-radius: 4px; padding: 40px 32px; display: flex; flex-direction: column; gap: 20px; }
-  .mark { font-family: var(--serif); font-weight: 700; font-size: 72px; line-height: .6; }
-  blockquote { margin: 0; font-family: var(--serif); font-size: 20px; line-height: 1.5; flex: 1; }
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .quote { margin: 0; background: #fff; border-radius: var(--r-lg); padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+  blockquote { margin: 0; flex: 1; line-height: 1.6; }
   figcaption { display: flex; flex-direction: column; font-size: 14px; }
-  figcaption strong { font-size: 16px; }
-  .quote--ph blockquote, .quote--ph figcaption { color: var(--muted); }
-  .quote--ph { border-style: dashed; }
 
-  .about { display: grid; grid-template-columns: 335px 1fr; gap: 80px; align-items: center; }
-  .intl { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; align-items: center; margin-top: 80px; padding-top: 48px; border-top: 1px solid var(--ink); }
-  .langs { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; margin: 0; padding: 0; justify-content: flex-end; }
-  .langs li { font-size: 14px; line-height: 1.3; }
+  .about { display: grid; grid-template-columns: 360px 1fr; gap: 64px; align-items: center; }
+  .portrait :global(img), .portrait :global(.ph) { border-radius: 50%; }
+  .intl { display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px; align-items: center; margin-top: 56px; padding: 32px; border: 1px solid var(--ink); border-radius: var(--r-xl); }
+  .langs { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; justify-content: flex-end; }
+  .langs li { font-size: 13px; line-height: 1.3; background: #fff; }
 
-  .contact { display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px; margin-top: 32px; }
-  dl { margin: 0; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
-  dt { font-size: 14px; }
-  dd { margin: 0; font-weight: 700; }
+  .faq .acc { background: #fff; }
+  .faq .acc:hover { background: var(--grey); }
+  .more { margin-top: 32px; background: #fff; border-radius: var(--r-lg); padding: 28px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .more h3 { font-size: 22px; margin-bottom: 4px; }
 
-  @media (max-width: 900px) {
+  .contact { background: var(--ink); color: #fff; border-radius: var(--r-xl); padding: clamp(32px, 6vw, 72px); display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: end; }
+  .contact .lead { color: rgba(255,255,255,.8); }
+  .contact :global(.btn--ghost) { color: #fff; border-color: #fff; }
+  .contact :global(.btn--ghost:hover) { background: #fff; color: var(--ink); }
+  dl { margin: 0; display: flex; flex-direction: column; gap: 16px; }
+  dt { font-size: 13px; color: rgba(255,255,255,.6); }
+  dd { margin: 0; font-weight: 500; }
+  dd a { text-decoration: none; }
+  dd a:hover { color: var(--yellow); }
+
+  @media (max-width: 1000px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .refs { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 760px) {
     .hero, .about, .intl, .contact { grid-template-columns: 1fr; }
-    .hero-art { justify-self: start; max-width: 260px; order: -1; }
-    .pillars, .services, .quotes, .grid { grid-template-columns: 1fr; }
-    .portrait { max-width: 240px; }
+    .hero-art { justify-self: start; max-width: 260px; order: -1; padding: 20px; }
+    .pillars, .grid, .refs, .quotes { grid-template-columns: 1fr; }
+    .portrait { max-width: 260px; }
     .langs { justify-content: flex-start; }
+    .logos ul { justify-content: center; }
   }
 </style>

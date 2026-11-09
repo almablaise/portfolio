@@ -10,9 +10,9 @@ const { steps, milestones } = Astro.props;
       <path d="M600 210 L870 30 L1140 210 L870 390 Z" />
       <line x1="330" y1="30" x2="330" y2="390" stroke-dasharray="2 6" opacity=".4" />
       <line x1="870" y1="30" x2="870" y2="390" stroke-dasharray="2 6" opacity=".4" />
-      <circle cx="60" cy="210" r="22" fill="var(--bg)" />
-      <circle cx="600" cy="210" r="22" fill="var(--bg)" />
-      <circle cx="1140" cy="210" r="22" fill="var(--bg)" />
+      <circle cx="60" cy="210" r="22" fill="var(--yellow)" />
+      <circle cx="600" cy="210" r="22" fill="var(--yellow)" />
+      <circle cx="1140" cy="210" r="22" fill="var(--yellow)" />
     </g>
   </svg>
   <ol class="steps">
@@ -24,7 +24,7 @@ const { steps, milestones } = Astro.props;
 </div>
 
 <style>
-  .process { position: relative; border: 1px solid var(--ink); border-radius: 4px; padding: 48px 32px 64px; }
+  .process { position: relative; background: var(--light); border-radius: var(--r-xl); padding: 48px 32px 64px; }
   svg { width: 100%; height: auto; display: block; }
   ol { list-style: none; margin: 0; padding: 0; }
   .steps li { position: absolute; top: calc(48px + 47%); transform: translate(-50%, -50%); left: calc(32px + (100% - 64px) * (0.1625 + var(--i) * 0.225)); width: 16%; text-align: center; font-size: 15px; line-height: 1.4; }

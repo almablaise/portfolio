@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../ProjectCard.astro';
-import { t, path, type Lang } from '../../i18n/ui';
+import { t, type Lang } from '../../i18n/ui';
 import { projectsFor } from '../../i18n/routes';
 
 interface Props { lang: Lang }
@@ -11,18 +11,18 @@ const projects = await projectsFor(lang);
 const filters = Object.entries(s.projects.filters);
 ---
 <Base lang={lang} title={s.projects.title} page="projects">
-  <section class="wrap" style="padding-top:80px">
-    <a href={path(lang)} class="back">← Home</a>
-    <h1 style="margin:24px 0">{s.projects.title}</h1>
-    <p class="lead">{s.projects.intro}</p>
-    <div class="filters" role="group">
-      <button class="tag tag--dark" data-filter="all" aria-pressed="true">{s.projects.all}</button>
+  <section class="wrap top">
+    <span class="pill reveal">{s.extra.workKicker}</span>
+    <h1 class="reveal" style="--d:1">{s.projects.title}</h1>
+    <p class="lead reveal" style="--d:2">{s.projects.intro}</p>
+    <div class="filters reveal" style="--d:3" role="group">
+      <button class="tag" data-filter="all" aria-pressed="true">{s.projects.all}</button>
       {filters.map(([k, label]) => <button class="tag" data-filter={k} aria-pressed="false">{label}</button>)}
     </div>
   </section>
-  <section class="wrap" style="padding-top:80px">
+  <section class="wrap" style="padding-top:56px">
     <div class="grid">
-      {projects.map((p) => <ProjectCard lang={lang} slug={p.slug} data={p.data} />)}
+      {projects.map((p, i) => <ProjectCard lang={lang} slug={p.slug} data={p.data} d={i % 3} />)}
     </div>
   </section>
 </Base>
@@ -33,11 +33,7 @@ const filters = Object.entries(s.projects.filters);
   buttons.forEach((b) =>
     b.addEventListener('click', () => {
       const f = b.dataset.filter!;
-      buttons.forEach((x) => {
-        const on = x === b;
-        x.classList.toggle('tag--dark', on);
-        x.setAttribute('aria-pressed', String(on));
-      });
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       cards.forEach((c) => {
         c.hidden = f !== 'all' && !(c.dataset.cat ?? '').split(' ').includes(f);
       });
@@ -46,9 +42,9 @@ const filters = Object.entries(s.projects.filters);
 </script>
 
 <style>
-  .back { font-weight: 700; font-size: 14px; text-decoration: none; }
-  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
-  .filters button { font-size: 14px; padding: 6px 16px; }
-  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 72px 32px; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .top { padding-top: clamp(40px, 6vw, 80px); display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
 </style>

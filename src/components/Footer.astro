@@ -6,28 +6,46 @@ const { lang } = Astro.props;
 const s = t(lang);
 const year = new Date().getFullYear();
 ---
-<footer>
-  <div class="wrap inner">
-    <div>
-      <p class="name">Alma Blaise</p>
-      <p>{s.footer.line1}</p>
-      <p>{s.footer.line2}</p>
-      <p>© Alma Blaise {year}. {s.footer.rights}</p>
+<footer class="wrap">
+  <div class="top">
+    <div class="brand">
+      <img src="/images/illustration.png" alt="" width="90" height="124" loading="lazy" />
+      <p class="muted">{s.footer.line2}</p>
     </div>
-    <div class="links">
-      <a href={`mailto:${site.email}`}>Mail</a>
-      {site.linkedin && <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>}
-      <a href={site.behance} target="_blank" rel="noopener">Behance</a>
+    <div class="col">
+      <p class="title">{s.footer.links}</p>
       <a href={path(lang, 'about')}>{s.nav.about}</a>
+      <a href={path(lang, 'projects')}>{s.nav.work}</a>
+      <a href={path(lang) + '#contact'}>{s.nav.contact}</a>
     </div>
+    <div class="col">
+      <p class="title">{s.nav.contact}</p>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <span>{s.footer.cities}</span>
+    </div>
+    <div class="col">
+      <p class="title">{s.footer.follow}</p>
+      <a class="social" href={site.behance} target="_blank" rel="noopener"><span class="dot">Bē</span>Behance</a>
+      {site.linkedin && <a class="social" href={site.linkedin} target="_blank" rel="noopener"><span class="dot">in</span>LinkedIn</a>}
+    </div>
+  </div>
+  <div class="bottom">
+    <span>© {year} Alma Blaise. {s.footer.rights}</span>
+    <span>{s.footer.line1}</span>
   </div>
 </footer>
 
 <style>
-  footer { background: var(--ink); color: #fff; margin-top: clamp(80px, 10vw, 160px); padding: 80px 0; }
-  .inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
-  .name { font-weight: 700; font-size: 22px; margin-bottom: 8px; }
-  p { font-size: 14px; opacity: .85; }
-  .links { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
-  .links a { text-underline-offset: 4px; font-size: 17px; }
+  footer { margin-top: clamp(80px, 10vw, 140px); }
+  .top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 56px; }
+  .brand { display: flex; flex-direction: column; gap: 16px; font-size: 14px; max-width: 260px; }
+  .brand img { width: 72px; height: auto; }
+  .col { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+  .title { font-family: var(--title); font-weight: 500; font-size: 15px; margin-bottom: 6px; }
+  .col a { text-decoration: none; }
+  .col a:hover { text-decoration: underline; }
+  .social { display: inline-flex; align-items: center; gap: 10px; }
+  .dot { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--yellow); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .bottom { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--ink); padding: 24px 0 40px; font-size: 13px; }
+  @media (max-width: 800px) { .top { grid-template-columns: 1fr 1fr; } }
 </style>
